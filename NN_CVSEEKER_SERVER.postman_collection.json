@@ -1,0 +1,246 @@
+{
+	"info": {
+		"name": "NN_CVSEEKER_SERVER",
+		"_postman_id": "4f92db37-dd50-48aa-cec2-eddbc278dc08",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"paun\",\n\t\"password\": \"123\"\n}"
+				},
+				"url": {
+					"raw": "localhost:8080/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"login"
+					]
+				},
+				"description": "Poziv metode za prijavu korisnika CVSeeker servera\n- Ocekivani rezultat uspense prijave je token."
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\n\t\"ime\" : \"Mile\",\n\t\"prezime\" : \"Kitic\",\n\t\"rolaId\" : 1,\n\t\"loginparams\" : \n\t{\n\t\t\n\t\t\"username\": \"mile\",\n\t\t\"password\": \"123\",\n\t\t\"lock\": false,\n\t\t\"qstn\" : 1,\n\t\t\"qstnA\" : \"wycombe\"\n\t}\n\t\n}"
+				},
+				"url": {
+					"raw": "localhost:8080/register",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"register"
+					]
+				},
+				"description": "REGISTER"
+			},
+			"response": []
+		},
+		{
+			"name": "Unos profila",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "NN-TOKEN",
+						"value": "bWlsZTpNaWxlOjIwMTgtMDQtMTZUMTY6MDA6MzUuNzU0="
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"korisnikId\":3,\n\t\"datumDo\":\"2018.04.16\",\n\t\"naziv\":\"profiNo1\",\n\t\"opis\":\"test\",\n\t\"segment\":\n\t{\n\t\t\n\t}\n}"
+				},
+				"url": {
+					"raw": "localhost:8080/profil/save",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"profil",
+						"save"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "get all profil",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "NN-TOKEN",
+						"value": "cGF1bjpOaWtvbGE6MjAxOC0wNC0xNlQyMDo0MjoxOS42NDA="
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"paun\",\n\t\"password\": \"123\"\n}"
+				},
+				"url": {
+					"raw": "localhost:8080/profil/all",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"profil",
+						"all"
+					]
+				},
+				"description": "Vrati sve profile"
+			},
+			"response": []
+		},
+		{
+			"name": "get profil po ID-ju",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "NN-TOKEN",
+						"value": "cGF1bjpOaWtvbGE6MjAxOC0wNC0xNlQyMDo0MjoxOS42NDA="
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"paun\",\n\t\"password\": \"123\"\n}"
+				},
+				"url": {
+					"raw": "localhost:8080/profil/get/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"profil",
+						"get",
+						"1"
+					]
+				},
+				"description": "Vrati sve profile"
+			},
+			"response": []
+		},
+		{
+			"name": "get profil po ID-ju korisnika",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "NN-TOKEN",
+						"value": "cGF1bjpOaWtvbGE6MjAxOC0wNC0xNlQyMDo0MjoxOS42NDA="
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"paun\",\n\t\"password\": \"123\"\n}"
+				},
+				"url": {
+					"raw": "localhost:8080/profil/getK/3",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"profil",
+						"getK",
+						"3"
+					]
+				},
+				"description": "Vrati sve profile za korisnika"
+			},
+			"response": []
+		},
+		{
+			"name": "brisanje profila po id-ju",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "NN-TOKEN",
+						"value": "cGF1bjpOaWtvbGE6MjAxOC0wNC0xNlQyMDo0MjoxOS42NDA="
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/profil/delete/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"profil",
+						"delete",
+						"1"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
