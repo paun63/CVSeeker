@@ -19,6 +19,8 @@ PUSH 001
   PUSH 002
     Web Projekat korisnickog interfejsa
 
+  PUSH 003 
+    Client prebacen na Maven, dodat kontroler, SO, serijalizacija i poziv resta u .rar
 
 
      
