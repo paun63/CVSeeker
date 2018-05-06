@@ -11,38 +11,37 @@
         <title>Login</title>
         <style></style>
     </h:head>
-    <h:body>
-        <b:container style="width: 100%; height: 100%;">
-            <b:panelGrid columns="3" col-spans="4,4,4" style="width: 100%;">
+    <h:body style="width: 100%; height: 100%">
+        <b:container style="width: 100%; height: 100%">
+            <!-- <b:panelGrid columns="3" col-spans="4,4,4" style="width: 100%; height: 100%;"> -->
 
-                <b:panel style="visibility: hidden;"></b:panel>
+                <!-- <b:panel style="visibility: hidden;"></b:panel> -->
 
-                <b:panel style="border: none; box-shadow: none; margin-top: 50%;">
-                    <b:form horizontal="true" id="formPrijava" style="margin-left: 5%;margin-right: 5%;">
+                <b:panel style="border: none; box-shadow: none; align: center; padding-left: 33%; padding-right: 33%; padding-top: 15%">
+                    <b:form horizontal="true" id="formPrijava" style="width: 100%; height: 100%;">
                         
-                        <b:inputText id ="txtUsername" placeholder="Korisnicko ime"  style="width: 100%; height: 100%;" label="Username" colMd="9" labelColMd="3" value="#{mbPrijava.korisnik}">
+                        <b:inputText id ="txtUsername" placeholder="Korisnicko ime"  style="width: 100%; height: 100%;" label="Username" colMd="10" labelColMd="2" value="#{mbPrijava.username}">
                           <f:facet name="prepend">
                             <b:icon name="user" />
                           </f:facet>
                         </b:inputText>
 
-                        <b:inputSecret id="txtPassword" placeholder="Lozinka" style="width: 100%; height: 100%;" label="Password" colMd="9" labelColMd="3" value="#{mbPrijava.lozinka}">
+                        <b:inputSecret id="txtPassword" placeholder="Lozinka" style="width: 100%; height: 100%;" label="Password" colMd="10" labelColMd="2" value="#{mbPrijava.password}">
                           <f:facet name="prepend">
                             <b:iconAwesome name="key" />
                           </f:facet>
                         </b:inputSecret>
-                        
+                        <h:outputText value="#{mbPrijava.porukaPrijava}" style="color: red;"/>
                         <b:panelGrid columns="2">
                             <b:commandButton value="prijava" look="info" style="width:100%" action="#{mbPrijava.prijaviKorisnika()}"/>
-                            <b:commandButton value="zaboravljena lozinka" look="default" style="width:100%" action="#{mbPrijava.redirectLozinka()}"/>
+                            <b:commandButton value="registracija" look="default" style="width:100%" action="#{mbPrijava.registracija()}"/>
                         </b:panelGrid>
-                        <h:outputText style="padding-left: 18%;" value="Nemate nalog? Registrujte se"/><b:commandButton value="ovde." look="link" style="width:20%" action="#{mbPrijava.registracija()}"/>
-                        
+                        <b:commandButton value="Zaboravili ste lozinku?" look="link" style="float:right" action="#{mbPrijava.redirectPassword()}"/>
                     </b:form>     
                 </b:panel>
-                <b:panel  style="visibility: hidden;"></b:panel>
+                <!-- <b:panel  style="visibility: hidden;"></b:panel> -->
                    
-            </b:panelGrid>
+            <!-- </b:panelGrid> -->
  
         </b:container>
         <h:outputText style="opacity: 0.2; margin-left: 43%; padding-top: 100%;" value="CVSeeker Trademark of SILAB"/>
