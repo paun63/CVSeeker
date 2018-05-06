@@ -18,6 +18,10 @@ PUSH 001
   
   PUSH 002
     Web Projekat korisnickog interfejsa
+    
+  PUSH 003
+    Unos SO: VratiSveKorisnike (aktiviranje i blokiranje korisnika od strane admina)
+    Unos SO: VratiSifarnike, SacuvajSifarnik i BrisanjeSifarnika (adminu omoguceno dodavanje i brisanje segmenata na CV profilu)
 
 
 
