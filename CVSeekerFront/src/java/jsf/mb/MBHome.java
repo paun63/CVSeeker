@@ -7,11 +7,15 @@ package jsf.mb;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 
 import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
+import javax.swing.JScrollPane;
 import static jsf.mb.MBPrijava.k1;
 import ki.domen.Korisnik;
 import ki.domen.Profil;
@@ -19,6 +23,8 @@ import ki.domen.Segment;
 import ki.domen.Sifarnik;
 import ki.domen.Stavka;
 import ki.kontroler.KontrolerKI;
+
+
 /*
 import ki.jasper.Jasper;
 import net.sf.jasperreports.engine.JRException;
@@ -74,6 +80,8 @@ public class MBHome implements Serializable{
     
     int br = 0;
     boolean uspesnoSacuvanProfil;
+    
+    private static final DateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
     
     public MBHome() {
       if (!(k1.getRolaId().getId() == 1)) 
@@ -281,12 +289,13 @@ public class MBHome implements Serializable{
     }
     
     public void postaviFormuZaUnos()
-    {
+    {   
+      profil = new Profil();
       this.prikazTabele = false;  
       this.prikazFormeZaUnos = true;
       this.prikazTabeleSve = false;
       this.prikazTabeleSvihKorisnika = false;
-      this.prikazTabeleSifarnika = false;
+      this.prikazTabeleSifarnika = false;   
     }
     
     public void postaviFormuZaSve()
@@ -380,15 +389,26 @@ public class MBHome implements Serializable{
     }
     
     
+    public void removeProfil(Profil p)
+    {
+        KontrolerKI.getInstance().obrisiProfil(p);
+        vratiSveProfileZaKorisnika();
+        //listaProfila.remove(p);
+    }
+    
     public void sacuvajProfil()
     {
         profil.setKorisnikId(MBPrijava.k1);
+        Date date = new Date();
+        profil.setDatum(sdf.format(date));
         KontrolerKI.getInstance().sacuvajProfil(profil);
+        postaviFormuZaCVListu();
     }
     
-    public void izmenaProfila()
+    public void izmenaProfila(Profil pr)
     {
-        
+        profil = pr;
+        postaviFormuZaUnos();
     }
 
     public List<Profil> getListaProfila() {
