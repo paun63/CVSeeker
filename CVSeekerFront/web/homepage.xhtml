@@ -50,34 +50,43 @@
                         
                         <h2>CV Lista korisnika</h2>
                         <hr/>
-                        
+                        <h:form>
                         <b:dataTable class ="ProfiliKorisnika" select = "true" styleClass="table table-striped" selectionMode="single" value="#{mbHome.listaProfila}" var="item" page-length="10">
-                            <h:column>
+                            <b:dataTableColumn style="width: 5%">
                                 <f:facet name="header" ><h:outputText value="Naziv"/></f:facet>
                                 <h:outputText value="#{item.naziv}" />
-                            </h:column>
-                            <h:column>
+                            </b:dataTableColumn>
+                            <b:dataTableColumn style="width: 5%">
                                 <f:facet name="header"><h:outputText value="Datum kreiranja" /></f:facet>
                                 <h:outputText value="#{item.datum}" />
-                            </h:column>
-                            <h:column>
+                            </b:dataTableColumn>
+                            <b:dataTableColumn style="width: 5%">
                                 <f:facet name="header"><h:outputText value="Ime" /></f:facet>
                                 <h:outputText value="#{item.korisnikId.ime}" />
-                            </h:column>
-                            <h:column>
+                            </b:dataTableColumn>
+                            <b:dataTableColumn style="width: 5%">
                                 <f:facet name="header"><h:outputText value="Prezime" /></f:facet>
                                 <h:outputText value="#{item.korisnikId.prezime}" />
-                            </h:column>
-                            <h:column>
+                            </b:dataTableColumn>
+                            <b:dataTableColumn style="width: 5%">
                                 <f:facet name="header"><h:outputText value="Opis" /></f:facet>
                                 <h:outputText value="#{item.opis}" />
-                            </h:column>
-                        </b:dataTable>
-                        <h:form> 
-                            <b:commandButton value="edit" icon="edit" ajax="true" update="@(.ProfiliKorisnika)" accesskey="" action="#{mbHome.izmenaProfila()}" > </b:commandButton>
-                            <b:commandButton value="jasper" look="info" icon="list-alt" onclick="#{mbHome.jasperProfil()}" style="margin-left: 2%">
-                            </b:commandButton>
-                        </h:form>
+                            </b:dataTableColumn>
+                            <b:dataTableColumn orderable="false" style="width: 1%">
+                                <f:facet name="header"><h:outputText value="Obrisi" /></f:facet>
+                                <b:commandButton value="" look="info" icon="minus" action="#{mbHome.removeProfil(item)}"/>
+                            </b:dataTableColumn>
+                            <b:dataTableColumn orderable="false" style="width: 1%">
+                                <f:facet name="header"><h:outputText value="Edit" /></f:facet>
+                                <b:commandButton value="" look="info" icon="edit" action="#{mbHome.izmenaProfila(item)}" > </b:commandButton>
+                            </b:dataTableColumn>
+                            <b:dataTableColumn orderable="false" style="width: 1%">
+                                <f:facet name="header"><h:outputText value="Jasper" /></f:facet>
+                                <b:commandButton value="" look="info" icon="list-alt" onclick="#{mbHome.jasperProfil()}" style="margin-left: 2%">
+                                </b:commandButton>
+                            </b:dataTableColumn>
+                            </b:dataTable>
+                            </h:form>
                     </b:row>
                     
                     
@@ -112,7 +121,7 @@
                                 <b:commandButton value="Dodaj segment" look="info" icon="plus" action="#{mbHome.segmentAdd()}" />  
                              </b:column>   
                          </b:panelGrid>
-                         <b:panelGrid colSpans="10,2" size="xs">
+                         <b:panelGrid colSpans="6,6" size="xs">
                              <b:column> 
                              <b:dataTable class ="SegmentiProfila" select = "false" styleClass="table table-striped" selectionMode="single" 
                                              value="#{mbHome.profil.segmentList}" var="itemSegment"
@@ -145,26 +154,26 @@
                                 <b:commandButton value="Dodaj stavku" look="info" icon="plus" action="#{mbHome.addStavka()}" /> 
                              </b:column>   
                          </b:panelGrid>
-                        <b:panelGrid colSpans="8,4" size="xs">
+                        <b:panelGrid colSpans="6,6" size="xs">
                              <b:column> 
                                  <b:dataTable class ="SegmentiProfila" select = "false" styleClass="table table-striped" selectionMode="single" 
                                               value="#{mbHome.seg.stavkaList}" var="itemStavka"
                                              searching = "false" paginated="false">                              
                                 <b:dataTableColumn orderable="false">
                                    <f:facet name="header" ><h:outputText value="Heading1"/></f:facet>
-                                   <h:inputText value="#{itemStavka.heading1}" />-->                                        
+                                   <h:inputText value="#{itemStavka.heading1}" />                                      
                                 </b:dataTableColumn>
                                 <b:dataTableColumn orderable="false">
                                    <f:facet name="header" ><h:outputText value="Heading2"/></f:facet>
-                                   <h:inputText value="#{itemStavka.heading2}" />-->                                        
+                                   <h:inputText value="#{itemStavka.heading2}" />                                       
                                 </b:dataTableColumn> 
                                 <b:dataTableColumn orderable="false">
                                    <f:facet name="header" ><h:outputText value="Datum od"/></f:facet>
-                                   <h:inputText value="#{itemStavka.datumOd}" />-->                                        
+                                   <h:inputText value="#{itemStavka.datumOd}" />                                        
                                 </b:dataTableColumn>  
                                 <b:dataTableColumn orderable="false">
                                    <f:facet name="header" ><h:outputText value="Datum do"/></f:facet>
-                                   <h:inputText value="#{itemStavka.datumDo}" />-->                                        
+                                   <h:inputText value="#{itemStavka.datumDo}" />                                       
                                 </b:dataTableColumn>       
                                 <b:dataTableColumn orderable="false">
                                    <f:facet name="header"><h:outputText value="Opis" /></f:facet>
