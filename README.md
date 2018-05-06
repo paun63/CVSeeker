@@ -20,8 +20,11 @@ PUSH 001
     Web Projekat korisnickog interfejsa
     
   PUSH 003
-    Unos SO: VratiSveKorisnike (aktiviranje i blokiranje korisnika od strane admina)
+    Unos SO: VratiSveKorisnike (aktiviranje i blokiranje korisnika od strane admina);
     Unos SO: VratiSifarnike, SacuvajSifarnik i BrisanjeSifarnika (adminu omoguceno dodavanje i brisanje segmenata na CV profilu)
+    
+  PUSH 004
+  Trenutni datum u kreirani Profil (MBHome); Button: Edit, Remove, Jasper
 
 
 
