@@ -5,6 +5,10 @@
  */
 package ki.domen;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -14,91 +18,136 @@ import java.util.Objects;
  * @author Paun
  */
 
-public class Korisnik implements Serializable{
+public class Korisnik implements Serializable, IDomenKI{
     
     private Integer id;
     private String ime;
     private String prezime;
     private String username;
     private String password;
+    private String token;
     private Boolean lock;
-    private String qstnAns;
-    private List<Profil> profilList;
     private Secretqstn qstnId;
+    private String qstnAns;
+    private List<Profil> profilList;   
     private Rola rolaId;
 
     public Korisnik() {
     }
-
+    
     public Korisnik(Integer id) {
         this.id = id;
     }
-
-    public Korisnik(Integer id, String ime, String prezime, String username, String password, String qstnAns) {
-        this.id = id;
+    
+    @JsonCreator
+    public Korisnik( @JsonProperty("ime") String ime,@JsonProperty("prezime") String prezime,@JsonProperty("username") String username,
+            @JsonProperty("password") String password,@JsonProperty("lock") Boolean lock,@JsonProperty("qstnId") Secretqstn qstnId,
+            @JsonProperty("qstnAns") String qstnAns,@JsonProperty("profilList") List<Profil> profilList,@JsonProperty("rolaId") Rola rolaId) {
         this.ime = ime;
         this.prezime = prezime;
         this.username = username;
         this.password = password;
+        this.lock = lock;
+        this.qstnId = qstnId;
         this.qstnAns = qstnAns;
+        this.profilList = profilList;
+        this.rolaId = rolaId;
     }
 
+    
+    //@JsonIgnore
+    @JsonProperty("id")
     public Integer getId() {
         return id;
     }
-
+    @JsonIgnore
+    @JsonProperty("id")
     public void setId(Integer id) {
         this.id = id;
     }
-
+    @JsonProperty("ime")
     public String getIme() {
         return ime;
     }
-
+    @JsonProperty("ime")
     public void setIme(String ime) {
         this.ime = ime;
     }
-
+    @JsonProperty("prezime")
     public String getPrezime() {
         return prezime;
     }
-
+    @JsonProperty("prezime")
     public void setPrezime(String prezime) {
         this.prezime = prezime;
     }
-
+    @JsonProperty("username")
     public String getUsername() {
         return username;
     }
-
+    @JsonProperty("username")
     public void setUsername(String username) {
         this.username = username;
     }
-
+    @JsonProperty("password")    
     public String getPassword() {
         return password;
     }
-
+    @JsonProperty("password")
     public void setPassword(String password) {
         this.password = password;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }  
+    
+    @JsonProperty("lock")
     public Boolean getLock() {
         return lock;
     }
-
+    @JsonProperty("lock")
     public void setLock(Boolean lock) {
         this.lock = lock;
     }
-
+    @JsonProperty("qstnId")
+    public Secretqstn getQstnId() {
+        return qstnId;
+    }
+    @JsonProperty("qstnId")
+    public void setQstnId(Secretqstn qstnId) {
+        this.qstnId = qstnId;
+    }
+    @JsonProperty("qstnAns")
     public String getQstnAns() {
         return qstnAns;
     }
-
+    @JsonProperty("qstnAns")
     public void setQstnAns(String qstnAns) {
         this.qstnAns = qstnAns;
+    }   
+    @JsonProperty("rolaId")
+    public Rola getRolaId() {
+        return rolaId;
     }
-
+    @JsonProperty("profilList")
+    public List<Profil> getProfilList() {
+        return profilList;
+    }
+    @JsonProperty("profilList")
+    public void setProfilList(List<Profil> profilList) {
+        this.profilList = profilList;
+    }
+    
+    @JsonProperty("rolaId")
+    public void setRolaId(Rola rolaId) {
+        this.rolaId = rolaId;
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

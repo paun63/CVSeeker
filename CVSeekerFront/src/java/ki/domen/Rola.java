@@ -5,6 +5,8 @@
  */
 package ki.domen;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -13,7 +15,7 @@ import java.util.Objects;
  * @author P
  */
 
-public class Rola implements Serializable {
+public class Rola implements Serializable, IDomenKI {
 
 
     private Integer id;
@@ -26,19 +28,26 @@ public class Rola implements Serializable {
     public Rola(Integer id) {
         this.id = id;
     }
-
+    
+    @JsonCreator
+    public Rola(@JsonProperty("id")Integer id,@JsonProperty("naziv") String naziv) {
+        this.id = id;
+        this.naziv = naziv;
+    }
+    
+    @JsonProperty("id")
     public Integer getId() {
         return id;
     }
-
+    @JsonProperty("id")
     public void setId(Integer id) {
         this.id = id;
     }
-
+    @JsonProperty("naziv")
     public String getNaziv() {
         return naziv;
     }
-
+    @JsonProperty("naziv")
     public void setNaziv(String naziv) {
         this.naziv = naziv;
     }
