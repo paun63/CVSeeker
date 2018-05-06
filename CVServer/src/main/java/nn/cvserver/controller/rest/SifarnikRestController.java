@@ -6,8 +6,8 @@
 package nn.cvserver.controller.rest;
 
 import java.util.List;
-import nn.cvserver.domen.Profil;
-import nn.cvserver.service.ProfilService;
+import nn.cvserver.domen.Sifarnik;
+import nn.cvserver.service.SifarnikService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,18 +22,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
- * @author SOLUNAC, P
+ * @author Paun
  */
 @RestController
-@RequestMapping("/profil")
-public class ProfilRestController {
+@RequestMapping("/sifarnik")
+public class SifarnikRestController {
     
     @Autowired
-    private ProfilService profilService;                                        
+    private SifarnikService sifarnikService;                                        
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Object getAll() {
-        List<Profil> list = profilService.findAll();
+        List<Sifarnik> list = sifarnikService.findAll();
         try
         {
             return ResponseEntity.status(HttpStatus.OK).body(list);    
@@ -41,46 +41,26 @@ public class ProfilRestController {
          catch (Exception ex) {
             HttpHeaders hh = new HttpHeaders();
             hh.setContentType(MediaType.TEXT_PLAIN);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(hh).body("Cannot return profiles.");
-        }
-    }
-
-    @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-    public @ResponseBody Object get(@PathVariable Integer id) {
-        Profil p = profilService.findByID(id);
-        return ResponseEntity.status(HttpStatus.OK).body(p);
-    }
-    
-    @RequestMapping(value = "/getK/{id}", method = RequestMethod.GET)
-    public @ResponseBody Object getK(@PathVariable Integer id) {
-        List<Profil> list = profilService.findByKorisnikID(id);
-        try
-        {
-            return ResponseEntity.status(HttpStatus.OK).body(list);
-        }  
-         catch (Exception ex) {
-            HttpHeaders hh = new HttpHeaders();
-            hh.setContentType(MediaType.TEXT_PLAIN);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(hh).body("Cannot return clients profiles.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(hh).body("Cannot return coded segments.");
         }
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE, produces = MediaType.TEXT_PLAIN_VALUE)
     public @ResponseBody Object delete(@PathVariable Integer id) {
-        profilService.delete(id);
+        sifarnikService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("Deleted");
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody Object save(@RequestBody Profil p) {
-        Profil profil = profilService.save(p);
+    public @ResponseBody Object save(@RequestBody Sifarnik s) {
+        Sifarnik sifarnik = sifarnikService.save(s);
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(profil);
+            return ResponseEntity.status(HttpStatus.OK).body(sifarnik);
         }
         catch (Exception ex) {
             HttpHeaders hh = new HttpHeaders();
             hh.setContentType(MediaType.TEXT_PLAIN);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(hh).body("Cannot save profile changes.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(hh).body("Cannot save coded segment changes.");
         }
         
     }

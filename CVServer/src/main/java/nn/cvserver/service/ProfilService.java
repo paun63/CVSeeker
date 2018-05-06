@@ -22,6 +22,6 @@ public interface ProfilService {
 
     Profil findByID(Integer profilID);
     
-    Profil findByKorisnikID(Integer korisnikId);
+    List<Profil> findByKorisnikID(Integer korisnikId);
     
 }
