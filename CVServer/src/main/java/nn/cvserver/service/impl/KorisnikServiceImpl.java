@@ -5,10 +5,13 @@
  */
 package nn.cvserver.service.impl;
 
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import nn.cvserver.dao.KorisnikDAO;
 import nn.cvserver.domen.Korisnik;
+import nn.cvserver.domen.Secretqstn;
 import nn.cvserver.service.KorisnikService;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +33,15 @@ public class KorisnikServiceImpl implements KorisnikService{
     }
     
     @Override
-    public Korisnik register(Korisnik korisnik) {       
-        return korisnikDAO.save(korisnik);
+    public Korisnik register(Korisnik korisnik) { 
+        if(korisnikDAO.findByUsername(korisnik.getUsername()) != null)
+        {
+            return korisnikDAO.save(korisnik);
+        }
+        else
+        {
+           return null; 
+        }
     }
     
     @Override
@@ -47,6 +57,24 @@ public class KorisnikServiceImpl implements KorisnikService{
         }
         String token = userDB.getUsername() + ":" + userDB.getIme() + ":" + LocalDateTime.now();
         return new String(Base64.encodeBase64(token.getBytes()));
+    }
+
+    @Override
+    public Korisnik passwordReset(Korisnik korisnik) {
+       Korisnik userDB = korisnikDAO.findByUsername(korisnik.getUsername());
+           
+       if ((userDB != null) && (userDB.getQstnAns().equals(korisnik.getQstnAns())))
+       {
+           userDB.setPassword(korisnik.getPassword());
+           korisnik = korisnikDAO.save(userDB);
+           return korisnik;
+       }
+       return null;
+    }
+
+    @Override
+    public List<Korisnik> findAll() {
+        return korisnikDAO.findAll();
     }
 
     

@@ -55,7 +55,7 @@ public class Profil implements Serializable {
     private String opis;
     @JoinColumn(name = "korisnikId", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    @JsonBackReference
+    
     private Korisnik korisnikId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "profilId")
     @JsonManagedReference

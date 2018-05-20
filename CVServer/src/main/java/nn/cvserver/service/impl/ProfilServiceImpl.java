@@ -49,7 +49,7 @@ public class ProfilServiceImpl implements ProfilService {
     }
 
     @Override
-    public Profil findByKorisnikID(Integer korisnikId) {
+    public List<Profil> findByKorisnikID(Integer korisnikId) {
         Korisnik k = korisnikDAO.findOne(korisnikId);
         return profilDAO.findByKorisnikId(k);
     }

@@ -9,6 +9,7 @@ import java.util.List;
 import nn.cvserver.domen.Profil;
 import nn.cvserver.service.ProfilService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,15 @@ public class ProfilRestController {
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Object getAll() {
         List<Profil> list = profilService.findAll();
-        return ResponseEntity.status(HttpStatus.OK).body(list);
+        try
+        {
+            return ResponseEntity.status(HttpStatus.OK).body(list);    
+        }
+         catch (Exception ex) {
+            HttpHeaders hh = new HttpHeaders();
+            hh.setContentType(MediaType.TEXT_PLAIN);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(hh).body("Cannot return profiles.");
+        }
     }
 
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
@@ -44,8 +53,16 @@ public class ProfilRestController {
     
     @RequestMapping(value = "/getK/{id}", method = RequestMethod.GET)
     public @ResponseBody Object getK(@PathVariable Integer id) {
-        Profil p = profilService.findByKorisnikID(id);
-        return ResponseEntity.status(HttpStatus.OK).body(p);
+        List<Profil> list = profilService.findByKorisnikID(id);
+        try
+        {
+            return ResponseEntity.status(HttpStatus.OK).body(list);
+        }  
+         catch (Exception ex) {
+            HttpHeaders hh = new HttpHeaders();
+            hh.setContentType(MediaType.TEXT_PLAIN);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(hh).body("Cannot return clients profiles.");
+        }
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE, produces = MediaType.TEXT_PLAIN_VALUE)
@@ -61,7 +78,9 @@ public class ProfilRestController {
             return ResponseEntity.status(HttpStatus.OK).body(profil);
         }
         catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+            HttpHeaders hh = new HttpHeaders();
+            hh.setContentType(MediaType.TEXT_PLAIN);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(hh).body("Cannot save profile changes.");
         }
         
     }

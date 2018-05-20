@@ -5,7 +5,10 @@
  */
 package nn.cvserver.service;
 
+import java.util.List;
 import nn.cvserver.domen.Korisnik;
+import nn.cvserver.domen.Profil;
+import nn.cvserver.domen.Secretqstn;
 
 
 /**
@@ -13,6 +16,9 @@ import nn.cvserver.domen.Korisnik;
  * @author P
  */
 public interface KorisnikService {
+    
+    List<Korisnik> findAll();
+    
     Korisnik login(String username, String password);
     
     Korisnik register(Korisnik korisnik);
@@ -20,4 +26,6 @@ public interface KorisnikService {
     Korisnik findByUsername(String username);
 
     String authenticate(Korisnik korisnik) throws Exception;
+    
+    Korisnik passwordReset(Korisnik korisnik);
 }
