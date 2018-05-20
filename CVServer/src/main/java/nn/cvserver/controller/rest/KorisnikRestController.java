@@ -7,7 +7,6 @@ package nn.cvserver.controller.rest;
 
 import java.util.List;
 import nn.cvserver.domen.Korisnik;
-import nn.cvserver.domen.Profil;
 import nn.cvserver.service.KorisnikService;
 import org.hibernate.exception.SQLGrammarException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @author P
  */
 @RestController
-
 public class KorisnikRestController {
 
     @Autowired
@@ -76,7 +74,6 @@ public class KorisnikRestController {
         }
     }
     
-    
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Object getAll() {
         List<Korisnik> list = korisnikService.findAll();
@@ -90,5 +87,6 @@ public class KorisnikRestController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(hh).body("Cannot return users.");
         }
     }
+    
     
 }

@@ -24,6 +24,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRField;
 
 /**
  *
@@ -60,7 +63,7 @@ public class Profil implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "profilId")
     @JsonManagedReference
     private List<Segment> segmentList;
-
+    
     public Profil() {
     }
 

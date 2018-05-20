@@ -71,7 +71,7 @@ public class KorisnikServiceImpl implements KorisnikService{
        }
        return null;
     }
-
+    
     @Override
     public List<Korisnik> findAll() {
         return korisnikDAO.findAll();
