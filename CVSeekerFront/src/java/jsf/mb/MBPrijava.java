@@ -121,7 +121,7 @@ public class MBPrijava implements Serializable {
         porukaPrijava = "";
         if(username.isEmpty() || password.isEmpty())
         {
-            porukaPrijava = "Molimo unesite e-mail i lozinku";
+            porukaPrijava = "Molimo unesite korisničko ime i lozinku";
             return "index.xhtml";
         }
 
@@ -131,7 +131,7 @@ public class MBPrijava implements Serializable {
         k1.setPassword(password);
         token = KontrolerKI.getInstance().prijava(k1);
         if (token == "Unknown user." || token == null){
-            porukaPrijava = "Pogresan e-mail ili lozinka";
+            porukaPrijava = "Pogresno korisničko ime ili lozinka";
             return "index.xhtml";
         }
         else{

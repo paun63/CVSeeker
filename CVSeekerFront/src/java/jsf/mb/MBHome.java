@@ -6,7 +6,9 @@
 package jsf.mb;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,17 +16,18 @@ import java.util.LinkedList;
 
 import java.util.List;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import javax.swing.JScrollPane;
 import static jsf.mb.MBPrijava.k1;
 import ki.domen.Korisnik;
+import ki.domen.Notifikacija;
 import ki.domen.Profil;
 import ki.domen.Segment;
 import ki.domen.Sifarnik;
 import ki.domen.Stavka;
 import ki.kontroler.KontrolerKI;
-
-
 /*
 import ki.jasper.Jasper;
 import net.sf.jasperreports.engine.JRException;
@@ -59,6 +62,7 @@ public class MBHome implements Serializable{
     */
     
     private Stavka stavka; 
+    private Notifikacija notifikacija;
     private Sifarnik sifarnik;
     /*private String heading1;
     private String heading2;
@@ -69,7 +73,11 @@ public class MBHome implements Serializable{
     private List<Profil> listaProfila;
     private List<Korisnik> listaKorisnika;
     private List<Sifarnik> listaSifarnika;
+    private List<Notifikacija> listaNotifikacija;
     private Profil p;
+    
+    String porukaValidacija1 = "";
+    String porukaValidacija2 = "";
     
     boolean admin;
     boolean prikazTabele;
@@ -77,6 +85,7 @@ public class MBHome implements Serializable{
     boolean prikazTabeleSve;
     boolean prikazTabeleSvihKorisnika;
     boolean prikazTabeleSifarnika;
+    boolean prikazTabeleZahteva;
     
     int br = 0;
     boolean uspesnoSacuvanProfil;
@@ -89,6 +98,7 @@ public class MBHome implements Serializable{
         this.prikazTabele = true;  
         this.prikazFormeZaUnos = false;
         this.prikazTabeleSve = false;
+        this.prikazTabeleZahteva = false;
         this.prikazTabeleSvihKorisnika = false;
         this.prikazTabeleSifarnika = false;
         this.admin = false;
@@ -99,6 +109,7 @@ public class MBHome implements Serializable{
         this.prikazTabele = false;  
         this.prikazFormeZaUnos = false;
         this.prikazTabeleSve = false;
+        this.prikazTabeleZahteva = false;
         this.prikazTabeleSvihKorisnika = true;
         this.prikazTabeleSifarnika = false;
         this.admin = true;
@@ -125,6 +136,7 @@ public class MBHome implements Serializable{
       //vratiSveProfile();  
       vratiSveSifarnike();
       vratiSveProfileZaKorisnika();
+      vratiSveNotifikacije();
     }
     
     public void addStavka()
@@ -147,6 +159,11 @@ public class MBHome implements Serializable{
     public void segmentAdd()
     {
         Segment s = new Segment();
+        if (profil.getSegmentList() == null)
+        {
+             List<Segment> ls = new LinkedList<>();
+              profil.setSegmentList(ls);
+        }
         profil.getSegmentList().add(s);
     }
     
@@ -180,6 +197,22 @@ public class MBHome implements Serializable{
     {
         k.setLock(false);
         KontrolerKI.getInstance().registracija(k);
+    }
+    
+    public void notifikacijaPrihvati(Notifikacija n)
+    {
+        n.setFlagOdobreno(true);
+        n.setFlagPrikazana(true);        
+        KontrolerKI.getInstance().SacuvajNotifikaciju(n);
+        vratiSveNotifikacije();    
+    }
+    
+    public void notifikacijaOdbij(Notifikacija n)
+    {
+        n.setFlagOdobreno(false);
+        n.setFlagPrikazana(true);
+        KontrolerKI.getInstance().SacuvajNotifikaciju(n);
+        vratiSveNotifikacije(); 
     }
     
     public void blokirajKorisnika(Korisnik k)
@@ -251,6 +284,65 @@ public class MBHome implements Serializable{
         
     }
     */
+    public void jasperProfil(Profil p) throws IOException
+    {
+        
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        context.redirect("http://localhost:8080/profil/jasper/"+p.getId());
+    }
+    
+    public void jasperProfil2(Profil p) throws IOException
+    {   
+        if (p.getKorisnikId().getId() == k1.getId())
+        {
+            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+            context.redirect("http://localhost:8080/profil/jasper/"+p.getId());
+            return;
+        }
+        boolean mozeValidacija = false;
+        Notifikacija nTemp = new Notifikacija();
+        List<Notifikacija> listaNotifikacija2 = (List<Notifikacija>)(List<?>)KontrolerKI.getInstance().vratiSveNotifikacije();
+        for(Notifikacija n : listaNotifikacija2){
+               if((n.getVlasnikZahteva() == k1.getId()) && (n.getValsnikProfila()== p.getKorisnikId().getId())
+                && (n.getProfil()== p.getId()) )
+               {
+                   mozeValidacija = true;
+                   nTemp = n;
+               }                
+            }   
+        if(mozeValidacija){                       
+            if (KontrolerKI.getInstance().ValidirajNotifikaciju(nTemp))
+            {
+                ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+                context.redirect("http://localhost:8080/profil/jasper/"+p.getId());
+            }
+            else
+            {
+                porukaValidacija1 = "* Nije odobren pristup CV-ju korisnika.";
+            }
+        }
+        else
+        {
+            Notifikacija n = new Notifikacija(0, p.getId(), p.getKorisnikId().getId(), k1.getId(), new Timestamp(System.currentTimeMillis()));           
+            n.setFlagPrikazana(false);
+            n.setFlagOdobreno(false);
+            KontrolerKI.getInstance().SacuvajNotifikaciju(n);
+            porukaValidacija2 = "* Poslat je zahtev. Ceka se odobrenje.";
+        }
+    }
+    
+    public void removeProfil(Profil p)
+    {
+        KontrolerKI.getInstance().obrisiProfil(p);
+        vratiSveProfileZaKorisnika();
+        //listaProfila.remove(p);
+    }
+    
+    public void izmenaProfila(Profil pr)
+    {
+        profil = pr;
+        postaviFormuZaUnos();
+    }
     
     public void vratiSveProfile()
     {
@@ -278,24 +370,36 @@ public class MBHome implements Serializable{
         listaSifarnika = new LinkedList<>(listaSifarnika);
     }
     
+    public void vratiSveNotifikacije()
+    {
+        listaNotifikacija = (List<Notifikacija>)(List<?>)KontrolerKI.getInstance().vratiNotifikacijeKorisnika(k1);   
+        if(listaNotifikacija != null)
+        {
+            listaNotifikacija = new LinkedList<>(listaNotifikacija);
+        }        
+    }
+    
     public void postaviFormuZaCVListu()
     {
       vratiSveProfileZaKorisnika();
       this.prikazTabele = true;  
       this.prikazFormeZaUnos = false;
       this.prikazTabeleSve = false;
+      this.prikazTabeleZahteva = false;
       this.prikazTabeleSvihKorisnika = false;
       this.prikazTabeleSifarnika = false;
     }
     
     public void postaviFormuZaUnos()
-    {   
+    {
       profil = new Profil();
+      //stavkaList = new LinkedList<Stavka>();
       this.prikazTabele = false;  
       this.prikazFormeZaUnos = true;
       this.prikazTabeleSve = false;
+      this.prikazTabeleZahteva = false;
       this.prikazTabeleSvihKorisnika = false;
-      this.prikazTabeleSifarnika = false;   
+      this.prikazTabeleSifarnika = false;
     }
     
     public void postaviFormuZaSve()
@@ -304,6 +408,17 @@ public class MBHome implements Serializable{
       this.prikazTabele = false;  
       this.prikazFormeZaUnos = false;
       this.prikazTabeleSve = true;
+      this.prikazTabeleZahteva = false;
+      this.prikazTabeleSvihKorisnika = false;
+      this.prikazTabeleSifarnika = false;
+    }
+    
+    public void postaviFormuZaZahteve()
+    {
+      this.prikazTabele = false;  
+      this.prikazFormeZaUnos = false;
+      this.prikazTabeleSve = false;
+      this.prikazTabeleZahteva = true;
       this.prikazTabeleSvihKorisnika = false;
       this.prikazTabeleSifarnika = false;
     }
@@ -314,6 +429,7 @@ public class MBHome implements Serializable{
       this.prikazTabele = false;  
       this.prikazFormeZaUnos = false;
       this.prikazTabeleSve = false;
+      this.prikazTabeleZahteva = false;
       this.prikazTabeleSvihKorisnika = true;
       this.prikazTabeleSifarnika = false;
     }
@@ -324,6 +440,7 @@ public class MBHome implements Serializable{
       this.prikazTabele = false;  
       this.prikazFormeZaUnos = false;
       this.prikazTabeleSve = false;
+      this.prikazTabeleZahteva = false;
       this.prikazTabeleSvihKorisnika = false;
       this.prikazTabeleSifarnika = true;
     }
@@ -389,13 +506,6 @@ public class MBHome implements Serializable{
     }
     
     
-    public void removeProfil(Profil p)
-    {
-        KontrolerKI.getInstance().obrisiProfil(p);
-        vratiSveProfileZaKorisnika();
-        //listaProfila.remove(p);
-    }
-    
     public void sacuvajProfil()
     {
         profil.setKorisnikId(MBPrijava.k1);
@@ -405,10 +515,9 @@ public class MBHome implements Serializable{
         postaviFormuZaCVListu();
     }
     
-    public void izmenaProfila(Profil pr)
+    public void izmenaProfila()
     {
-        profil = pr;
-        postaviFormuZaUnos();
+        
     }
 
     public List<Profil> getListaProfila() {
@@ -457,6 +566,38 @@ public class MBHome implements Serializable{
 
     public void setPrikazTabele(boolean prikazTabele) {
         this.prikazTabele = prikazTabele;
+    }
+
+    public Notifikacija getNotifikacija() {
+        return notifikacija;
+    }
+
+    public void setNotifikacija(Notifikacija notifikacija) {
+        this.notifikacija = notifikacija;
+    }
+
+    public Sifarnik getSifarnik() {
+        return sifarnik;
+    }
+
+    public void setSifarnik(Sifarnik sifarnik) {
+        this.sifarnik = sifarnik;
+    }
+
+    public String getPorukaValidacija1() {
+        return porukaValidacija1;
+    }
+
+    public void setPorukaValidacija1(String porukaValidacija1) {
+        this.porukaValidacija1 = porukaValidacija1;
+    }
+
+    public String getPorukaValidacija2() {
+        return porukaValidacija2;
+    }
+
+    public void setPorukaValidacija2(String porukaValidacija2) {
+        this.porukaValidacija2 = porukaValidacija2;
     }
 
     public boolean isPrikazFormeZaUnos() {
@@ -527,6 +668,39 @@ public class MBHome implements Serializable{
 
     public void setAdmin(boolean admin) {
         this.admin = admin;
+    }
+         
+    /*public void saveMessage() {
+        
+        for (Notifikacija n : listaNotifikacija) {
+            FacesContext context = FacesContext.getCurrentInstance();
+            //Korisnik vlasnikZahteva = new Korisnik(n.getVlasnikZahteva());
+            //vlasnikZahteva = (Korisnik) KontrolerKI.getInstance().vratiKorisnka(vlasnikZahteva);
+            context.addMessage(null, new FacesMessage("Korisnik:" + n.getVlasnikZahteva() ,  "Traži pristup Vašem profilu broj: " + n.getProfil()));
+        }
+        
+        
+    }*/
+
+    public List<Notifikacija> getListaNotifikacija() {
+        return listaNotifikacija;
+    }
+
+    public boolean isPrikazTabeleZahteva() {
+        return prikazTabeleZahteva;
+    }
+
+    public void setListaNotifikacija(List<Notifikacija> listaNotifikacija) {
+        this.listaNotifikacija = listaNotifikacija;
+    }
+
+    public void setPrikazTabeleZahteva(boolean prikazTabeleZahteva) {
+        this.prikazTabeleZahteva = prikazTabeleZahteva;
+    }
+    
+    public String logout() {
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        return "index.xhtml?faces-redirect=true";
     }
       
     
