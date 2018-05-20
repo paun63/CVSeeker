@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import ki.domen.IDomenKI;
 import ki.domen.Korisnik;
+import ki.domen.Notifikacija;
 import ki.domen.Profil;
 import ki.domen.Secretqstn;
 import ki.domen.Sifarnik;
@@ -170,6 +171,22 @@ public class JSONConverter {
         
        return null;
     }
+    
+    public List<Notifikacija> JSONToNotifikacijaCollection(String json)
+    {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        try 
+        {
+           List<Notifikacija> ls =  Arrays.asList(mapper.readValue(json, Notifikacija[].class));
+           return ls;
+           
+        } catch (IOException ex) {
+           Logger.getLogger(SOPrijava.class.getName()).log(Level.SEVERE, "JSONConverter.JSONToNotifikacijaCollection: "+ex.getMessage(), ex);
+        }
+        
+       return null;
+    }
     /*public IDomenKI JSONToObject(String json)
     {
         ObjectMapper mapper = new ObjectMapper();
@@ -201,5 +218,20 @@ public class JSONConverter {
         
        return null;
     }*/
+
+    public IDomenKI JSONToNotifikacija(String json) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        try 
+        {
+           Notifikacija n = mapper.readValue(json, Notifikacija.class);
+           return n;
+           
+        } catch (IOException ex) {
+           Logger.getLogger(SOPrijava.class.getName()).log(Level.SEVERE, "JSONConverter.JSONToNotifikacija: "+ex.getMessage(), ex);
+        }
+        
+       return null;
+    }
     
 }

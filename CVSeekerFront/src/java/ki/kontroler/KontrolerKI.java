@@ -11,15 +11,20 @@ import ki.so.AbstractSO;
 import ki.so.SOBrisanjeProfila;
 import ki.so.SOBrisanjeSifarnika;
 import ki.so.SOPrijava;
+import ki.so.SOPrikaziJasper;
 import ki.so.SORegistracija;
 import ki.so.SOResetLozinke;
+import ki.so.SOSacuvajNotifikaciju;
 import ki.so.SOSacuvajSifarnik;
 import ki.so.SOTajnoPitanje;
 import ki.so.SOUnosProfila;
+import ki.so.SOValidirajNotifikaciju;
 import ki.so.SOVratiKorisnika;
+import ki.so.SOVratiNotifikacijeKorisnika;
 import ki.so.SOVratiProfile;
 import ki.so.SOVratiSifarnike;
 import ki.so.SOVratiSveKorisnike;
+import ki.so.SOVratiSveNotifikacije;
 import ki.so.SOVratiTajnoPitanjeKorisnika;
 
 
@@ -142,6 +147,41 @@ public class KontrolerKI {
         AbstractSO so = new SOBrisanjeSifarnika();       
            
         return ((SOBrisanjeSifarnika)so).izvrsi(ODKI);       
+    }
+    
+    public List<IDomenKI> vratiNotifikacijeKorisnika(IDomenKI ODKI)
+    {
+        AbstractSO so = new SOVratiNotifikacijeKorisnika();       
+           
+        return ((SOVratiNotifikacijeKorisnika)so).izvrsi(ODKI);
+    }
+    
+    public List<IDomenKI> vratiSveNotifikacije()
+    {
+        AbstractSO so = new SOVratiSveNotifikacije();       
+           
+        return ((SOVratiSveNotifikacije)so).izvrsi();
+    }
+    
+    public IDomenKI SacuvajNotifikaciju(IDomenKI ODKI) 
+    {
+       AbstractSO so = new SOSacuvajNotifikaciju();       
+           
+       return ((SOSacuvajNotifikaciju)so).izvrsi(ODKI); 
+    }
+    
+    public boolean ValidirajNotifikaciju(IDomenKI ODKI) 
+    {
+       AbstractSO so = new SOValidirajNotifikaciju();       
+           
+       return ((SOValidirajNotifikaciju)so).izvrsi(ODKI); 
+    }
+    
+    public void prikaziJasper(Integer id)
+    {
+         AbstractSO so = new SOPrikaziJasper();       
+           
+        ((SOPrikaziJasper)so).izvrsi(id);
     }
     
     

@@ -61,6 +61,14 @@ public abstract class AbstractSO {
         return (List<IDomenKI>)(List<?>)JSONConverter.getInstance().JSONToSifarnikCollection(json);
     }
     
+    public List<IDomenKI> JSONToNotifikacijaCollection(String json)
+    {
+        return (List<IDomenKI>)(List<?>)JSONConverter.getInstance().JSONToNotifikacijaCollection(json);
+    }
+    public IDomenKI JSONToNotifikacija(String json)
+    {
+        return JSONConverter.getInstance().JSONToNotifikacija(json);
+    }
     /*public IDomenKI JSONToObject(String json)
     {
         return JSONConverter.getInstance().JSONToObject(json);

@@ -92,6 +92,26 @@ public class RestCaller {
                                operacija = RestHttpOperationEnum.POST.toString();
                                trebaToken = true;
                      break;
+            case "VRATI_NOTIFIKACIJE": adresaResursa = adresaResursa + "/notify/getK/"; 
+                               operacija = RestHttpOperationEnum.GET.toString();
+                               trebaToken = true;
+                     break;  
+            case "VRATI_SVE_NOTIFIKACIJE": adresaResursa = adresaResursa + "/notify/all/"; 
+                               operacija = RestHttpOperationEnum.GET.toString();
+                               trebaToken = true;
+                     break;
+            case "SACUVAJ_NOTIFIKACIJU": adresaResursa = adresaResursa + "/notify/save"; 
+                               operacija = RestHttpOperationEnum.POST.toString();
+                               trebaToken = true;
+                     break; 
+            case "VALIDIRAJ_NOTIFIKACIJU": adresaResursa = adresaResursa + "/notify/validate"; 
+                               operacija = RestHttpOperationEnum.POST.toString();
+                               trebaToken = true;
+                     break; 
+            case "PRIKAZI_JASPER": adresaResursa = adresaResursa + "/profil/jasper/"; 
+                               operacija = RestHttpOperationEnum.GET.toString();
+                               trebaToken = true;
+                     break;                        
             }
         
         if (i != 0)
