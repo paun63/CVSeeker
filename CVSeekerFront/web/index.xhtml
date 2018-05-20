@@ -16,10 +16,19 @@
             <!-- <b:panelGrid columns="3" col-spans="4,4,4" style="width: 100%; height: 100%;"> -->
 
                 <!-- <b:panel style="visibility: hidden;"></b:panel> -->
-
-                <b:panel style="border: none; box-shadow: none; align: center; padding-left: 33%; padding-right: 33%; padding-top: 15%">
+                
+                  
+                
+                <b:panel style="border: none; box-shadow: none; align: center; padding-left: 33%; padding-right: 33%; padding-top: 5%">
+                    
+                    
+                    <b:form horizontal="true" id="formPic" style="align: center; padding-left: 33%; padding-right: 33%">
+                        <h:graphicImage value="resources/images/CvSeekerLogo.jpg" width="200" height="200"></h:graphicImage> 
+                    </b:form>     
+                    <br></br>
+                    <br></br>
+                    <br></br>
                     <b:form horizontal="true" id="formPrijava" style="width: 100%; height: 100%;">
-                        
                         <b:inputText id ="txtUsername" placeholder="Korisnicko ime"  style="width: 100%; height: 100%;" label="Username" colMd="10" labelColMd="2" value="#{mbPrijava.username}">
                           <f:facet name="prepend">
                             <b:icon name="user" />
@@ -33,12 +42,13 @@
                         </b:inputSecret>
                         <h:outputText value="#{mbPrijava.porukaPrijava}" style="color: red;"/>
                         <b:panelGrid columns="2">
-                            <b:commandButton value="prijava" look="info" style="width:100%" action="#{mbPrijava.prijaviKorisnika()}"/>
+                            <b:commandButton id ="ref" value="prijava" look="info" style="width:100%" action="#{mbPrijava.prijaviKorisnika()}"/>
                             <b:commandButton value="registracija" look="default" style="width:100%" action="#{mbPrijava.registracija()}"/>
                         </b:panelGrid>
                         <b:commandButton value="Zaboravili ste lozinku?" look="link" style="float:right" action="#{mbPrijava.redirectPassword()}"/>
                     </b:form>     
                 </b:panel>
+                
                 <!-- <b:panel  style="visibility: hidden;"></b:panel> -->
                    
             <!-- </b:panelGrid> -->
