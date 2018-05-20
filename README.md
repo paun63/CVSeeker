@@ -2,6 +2,9 @@
 Revizija projekta nst
 --
 INSTRUKCIJE: 
+Serverski deo> "CVServer"
+Klijentski deo> "CVSeekerFront"
+Baza podataka> "SqlSkript-2.5.sql
 
 PUSH 001
   Inicijalni push ukljucuje
