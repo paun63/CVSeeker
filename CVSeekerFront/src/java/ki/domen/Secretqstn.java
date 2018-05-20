@@ -5,6 +5,8 @@
  */
 package ki.domen;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -13,7 +15,7 @@ import java.util.Objects;
  * @author P
  */
 
-public class Secretqstn implements Serializable {
+public class Secretqstn implements Serializable, IDomenKI {
 
 
     private Integer id;
@@ -27,33 +29,33 @@ public class Secretqstn implements Serializable {
     public Secretqstn(Integer id) {
         this.id = id;
     }
-
-    public Secretqstn(Integer id, String opis, String opisUS) {
+    @JsonCreator
+    public Secretqstn( @JsonProperty("id")Integer id,@JsonProperty("opis") String opis,@JsonProperty("opisUS") String opisUS) {
         this.id = id;
         this.opis = opis;
         this.opisUS = opisUS;
     }
-
+    @JsonProperty("id")
     public Integer getId() {
         return id;
     }
-
+    @JsonProperty("id")
     public void setId(Integer id) {
         this.id = id;
     }
-
+    @JsonProperty("opis")
     public String getOpis() {
         return opis;
     }
-
+    @JsonProperty("opis")
     public void setOpis(String opis) {
         this.opis = opis;
     }
-
+    @JsonProperty("opisUS")
     public String getOpisUS() {
         return opisUS;
     }
-
+    @JsonProperty("opisUS")
     public void setOpisUS(String opisUS) {
         this.opisUS = opisUS;
     }

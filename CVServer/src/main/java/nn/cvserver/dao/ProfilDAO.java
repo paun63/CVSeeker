@@ -5,6 +5,7 @@
  */
 package nn.cvserver.dao;
 
+import java.util.List;
 import nn.cvserver.domen.Korisnik;
 import nn.cvserver.domen.Profil;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,5 +21,5 @@ public interface ProfilDAO extends JpaRepository <Profil, Integer> {
     Profil save(Profil profil);
     
     @Query("SELECT p FROM Profil p WHERE p.korisnikId = ?1")
-    Profil findByKorisnikId(Korisnik korisnikId);
+    List<Profil> findByKorisnikId(Korisnik korisnikId);
 }

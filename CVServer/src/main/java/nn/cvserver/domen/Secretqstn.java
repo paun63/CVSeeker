@@ -53,6 +53,8 @@ public class Secretqstn implements Serializable {
     public Secretqstn() {
     }
 
+    
+
     public Secretqstn(Integer id) {
         this.id = id;
     }

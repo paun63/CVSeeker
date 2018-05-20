@@ -5,6 +5,8 @@
  */
 package ki.domen;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -14,11 +16,15 @@ import java.util.Objects;
  * @author P
  */
 
-public class Segment implements Serializable {
+public class Segment implements Serializable, IDomenKI {
 
+    @JsonProperty("id")
     private Integer id;
+    @JsonProperty("heading")
     private String heading;
+    @JsonProperty("opis")
     private String opis;
+    @JsonProperty("stavkaList")
     private List<Stavka> stavkaList;
     private Profil profilId;
 
@@ -28,31 +34,49 @@ public class Segment implements Serializable {
     public Segment(Integer id) {
         this.id = id;
     }
-
+    
+    /*@JsonCreator
+    public Segment( @JsonProperty("id") Integer id, @JsonProperty("heading") String heading,@JsonProperty("opis") String opis,
+            @JsonProperty("stavkaList") List<Stavka> stavkaList) {
+        this.id = id;
+        this.heading = heading;
+        this.opis = opis;
+        this.stavkaList = stavkaList;
+    }*/
+    
+    @JsonProperty("id")
     public Integer getId() {
         return id;
     }
-
+    @JsonProperty("id")
     public void setId(Integer id) {
         this.id = id;
     }
-
+    @JsonProperty("heading")
     public String getHeading() {
         return heading;
     }
-
+    @JsonProperty("heading")
     public void setHeading(String heading) {
         this.heading = heading;
     }
-
+    @JsonProperty("opis")
     public String getOpis() {
         return opis;
     }
-
+    @JsonProperty("opis")
     public void setOpis(String opis) {
         this.opis = opis;
     }
-
+    @JsonProperty("stavkaList")
+    public List<Stavka> getStavkaList() {
+        return stavkaList;
+    }
+    @JsonProperty("stavkaList")
+    public void setStavkaList(List<Stavka> stavkaList) {
+        this.stavkaList = stavkaList;
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

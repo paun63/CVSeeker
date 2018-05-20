@@ -5,6 +5,7 @@
  */
 package nn.cvserver.domen;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.List;
@@ -23,6 +24,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.springframework.jmx.export.annotation.ManagedResource;
 
 /**
  *
@@ -66,7 +68,7 @@ public class Korisnik implements Serializable {
     @Column(name = "qstnAns")
     private String qstnAns;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "korisnikId")
-    @JsonManagedReference
+    @JsonBackReference
     private List<Profil> profilList;
     @JoinColumn(name = "qstnId", referencedColumnName = "id")
     @ManyToOne(optional = false)

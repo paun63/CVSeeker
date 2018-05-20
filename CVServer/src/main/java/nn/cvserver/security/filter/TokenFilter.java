@@ -36,8 +36,9 @@ public class TokenFilter extends OncePerRequestFilter{
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain fc) throws ServletException, IOException {
         final HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-        if ((!"/login".equals(httpRequest.getRequestURI()))&&(!"/register".equals(httpRequest.getRequestURI()))) {
-            
+        if ((!"/login".equals(httpRequest.getRequestURI()))&&(!"/register".equals(httpRequest.getRequestURI()))
+                &&(!"/passwordReset".equals(httpRequest.getRequestURI()))&&(!"/sq/getUserSq".equals(httpRequest.getRequestURI()))
+                &&(!"/sq/getUserSq".equals(httpRequest.getRequestURI()))) {
             String token = httpRequest.getHeader(NN_HEADER_NAME);
             if (StringUtils.hasText(token)) {
                 try {
