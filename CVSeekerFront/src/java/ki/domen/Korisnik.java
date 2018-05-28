@@ -192,7 +192,8 @@ public class Korisnik implements Serializable, IDomenKI{
 
     @Override
     public String toString() {
-        return "Korisnik{" + "id=" + id + ", ime=" + ime + ", prezime=" + prezime + ", username=" + username + ", password=" + password + ", lock=" + lock + ", qstnAns=" + qstnAns + ", profilList=" + profilList + ", qstnId=" + qstnId + ", rolaId=" + rolaId + '}';
+        //return "Korisnik{" + "id=" + id + ", ime=" + ime + ", prezime=" + prezime + ", username=" + username + ", password=" + password + ", lock=" + lock + ", qstnAns=" + qstnAns + ", profilList=" + profilList + ", qstnId=" + qstnId + ", rolaId=" + rolaId + '}';
+        return "Korisnik{ime=" + ime + ", prezime=" + prezime + ", username=" + username +"}";
     }
     
     

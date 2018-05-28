@@ -80,7 +80,8 @@ public class Sifarnik implements Serializable, IDomenKI {
 
     @Override
     public String toString() {
-        return naziv;
+        //return naziv;
+        return "Sifarnik{id=" + id + ", naziv=" + naziv +"}";
     }
     
 }
