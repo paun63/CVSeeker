@@ -36,6 +36,7 @@
                             <b:navCommandLink href="#" value="Pregled zahteva" action="#{mbHome.postaviFormuZaZahteve()}" rendered="#{!mbHome.admin}"/>
                             <b:navCommandLink href="#" value="Svi Korisnici" action="#{mbHome.postaviFormuZaPrikazKorisnika()}" rendered="#{mbHome.admin}"/>
                             <b:navCommandLink href="#" value="Izmena segmenata" action="#{mbHome.postaviFormuZaPrikazSifarnika()}" rendered="#{mbHome.admin}"/>
+                            <b:navCommandLink href="#" value="Elastic search" action="#{mbHome.postaviFormuZaElastic()}" rendered="#{mbHome.admin}"/>
                         </b:listLinks>
                     </b:column>
                 </h:form>    
@@ -374,6 +375,51 @@
                             </b:dataTableColumn>
                         </b:dataTable>
                         </b:column>                         
+                        </b:panelGrid>
+                        </h:form>
+                    </b:row>
+                    
+                    <b:row rendered="#{mbHome.prikazFormeElastic}" >
+                        
+                        <h2>Elastic search</h2>
+                        <hr/>
+                        <br></br>
+                        <h:form>                          
+                        <b:panelGrid colSpans="6,6">
+                        
+                        <b:column>
+                            <b:panelGrid colSpans="6,6">
+                              <b:column>
+                                <b:commandButton value="Kreiraj indeks i popuni korisnicima" look="info" action="#{mbHome.kreiranjeIndeksaKorisnika()}"/>   
+                                <br></br>
+                                <hr/>                               
+                                <b:commandButton value="Kreiraj indeks i popuni sifarnikom" look="info" action="#{mbHome.kreiranjeIndeksaSifarnika()}"/>                   
+                              </b:column> 
+                                
+                              <b:column>
+                                <b:commandButton value="Obrisi indeks korisnika" look="info" action="#{mbHome.obrisiIndeksaKorisnika()}"/>   
+                                <br></br>
+                                <hr/>                               
+                                <b:commandButton value="Obrisi indeks sifarnika" look="info" action="#{mbHome.obrisiIndeksaSifarnika()}" /> 
+                              </b:column> 
+                            </b:panelGrid>  
+                        </b:column>                                              
+                        
+                        <b:column>
+                           
+                                <b:selectOneMenu value="#{mbHome.vrstaPretrage}" >
+                                        <f:selectItem itemLabel="Korisnici" itemValue="1" />
+                                        <f:selectItem itemLabel="Sifarnik" itemValue="2" />
+                              </b:selectOneMenu> 
+                              
+                              <b:inputText id ="txtNaziv"  value="#{mbHome.uslovPretrage}" />
+                              
+                              <b:commandButton id ="myButton" value="Pretraga" look="info" action="#{mbHome.pretraga()}"/>
+                              
+                              <b:inputTextarea placeholder="Rezultat pretrage" value="#{mbHome.rezultatPretrage}"/>
+                              <h:outputText value="#{mbHome.greskaPretrage}" style="color: black;"/>
+                            
+                        </b:column>       
                         </b:panelGrid>
                         </h:form>
                     </b:row>
