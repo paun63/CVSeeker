@@ -33,6 +33,9 @@ PUSH 001
     
   PUSH 005
   Trenutni datum u kreirani Profil (MBHome); Button: Edit, Remove, Jasper
+  
+  PUSH 006
+  Ubacen Elasticsearch u projekat. Update fajlova MBHome.java, homepage.xhtml, Korisnik.java, Sifarnik.java 
 
 
 
