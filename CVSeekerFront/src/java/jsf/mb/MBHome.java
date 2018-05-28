@@ -6,8 +6,15 @@
 package jsf.mb;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -15,6 +22,8 @@ import java.util.Date;
 import java.util.LinkedList;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -27,6 +36,7 @@ import ki.domen.Profil;
 import ki.domen.Segment;
 import ki.domen.Sifarnik;
 import ki.domen.Stavka;
+import ki.json.JSONConverter;
 import ki.kontroler.KontrolerKI;
 /*
 import ki.jasper.Jasper;
@@ -86,6 +96,12 @@ public class MBHome implements Serializable{
     boolean prikazTabeleSvihKorisnika;
     boolean prikazTabeleSifarnika;
     boolean prikazTabeleZahteva;
+    private boolean prikazFormeElastic;
+    
+    private String uslovPretrage;   
+    private String greskaPretrage;
+    private String rezultatPretrage;
+    private int vrstaPretrage;
     
     int br = 0;
     boolean uspesnoSacuvanProfil;
@@ -101,6 +117,7 @@ public class MBHome implements Serializable{
         this.prikazTabeleZahteva = false;
         this.prikazTabeleSvihKorisnika = false;
         this.prikazTabeleSifarnika = false;
+        this.prikazFormeElastic = false;
         this.admin = false;
       }
       else
@@ -112,6 +129,7 @@ public class MBHome implements Serializable{
         this.prikazTabeleZahteva = false;
         this.prikazTabeleSvihKorisnika = true;
         this.prikazTabeleSifarnika = false;
+        this.prikazFormeElastic = false;
         this.admin = true;
       }
               
@@ -388,6 +406,7 @@ public class MBHome implements Serializable{
       this.prikazTabeleZahteva = false;
       this.prikazTabeleSvihKorisnika = false;
       this.prikazTabeleSifarnika = false;
+      this.prikazFormeElastic = false;
     }
     
     public void postaviFormuZaUnos()
@@ -400,6 +419,7 @@ public class MBHome implements Serializable{
       this.prikazTabeleZahteva = false;
       this.prikazTabeleSvihKorisnika = false;
       this.prikazTabeleSifarnika = false;
+      this.prikazFormeElastic = false;
     }
     
     public void postaviFormuZaSve()
@@ -411,6 +431,7 @@ public class MBHome implements Serializable{
       this.prikazTabeleZahteva = false;
       this.prikazTabeleSvihKorisnika = false;
       this.prikazTabeleSifarnika = false;
+      this.prikazFormeElastic = false;
     }
     
     public void postaviFormuZaZahteve()
@@ -421,6 +442,7 @@ public class MBHome implements Serializable{
       this.prikazTabeleZahteva = true;
       this.prikazTabeleSvihKorisnika = false;
       this.prikazTabeleSifarnika = false;
+      this.prikazFormeElastic = false;
     }
     
     public void postaviFormuZaPrikazKorisnika()
@@ -432,6 +454,7 @@ public class MBHome implements Serializable{
       this.prikazTabeleZahteva = false;
       this.prikazTabeleSvihKorisnika = true;
       this.prikazTabeleSifarnika = false;
+      this.prikazFormeElastic = false;
     }
     
     public void postaviFormuZaPrikazSifarnika()
@@ -443,7 +466,21 @@ public class MBHome implements Serializable{
       this.prikazTabeleZahteva = false;
       this.prikazTabeleSvihKorisnika = false;
       this.prikazTabeleSifarnika = true;
+      this.prikazFormeElastic = false;
     }
+    
+    public void postaviFormuZaElastic()
+    {
+      vratiSveSifarnike();
+      this.prikazTabele = false;  
+      this.prikazFormeZaUnos = false;
+      this.prikazTabeleSve = false;
+      this.prikazTabeleZahteva = false;
+      this.prikazTabeleSvihKorisnika = false;
+      this.prikazTabeleSifarnika = false;
+      this.prikazFormeElastic = true;
+    }
+
 
     public Profil getProfil() {
         return profil;
@@ -696,12 +733,266 @@ public class MBHome implements Serializable{
 
     public void setPrikazTabeleZahteva(boolean prikazTabeleZahteva) {
         this.prikazTabeleZahteva = prikazTabeleZahteva;
-    }
+    }    
     
     public String logout() {
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         return "index.xhtml?faces-redirect=true";
     }
-      
+
+    public boolean isPrikazFormeElastic() {
+        return prikazFormeElastic;
+    }
+
+    public void setPrikazFormeElastic(boolean prikazFormeElastic) {
+        this.prikazFormeElastic = prikazFormeElastic;
+    }
     
+    public void kreiranjeIndeksaKorisnika() throws Exception
+    {
+        int br = 1;
+        String json = "";
+        
+        for (Korisnik k : listaKorisnika)
+        {            
+            json = "{ \"ime\": \""+k.getIme()+"\", \"prezime\": \""+k.getPrezime()+"\", \"username\": \""+k.getUsername()+"\" }";
+
+            String url = "http://localhost:9200/korisnici/korisnici/"+br;
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("PUT");
+            con.setRequestProperty("Content-Type", "application/json");         
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(json);
+            wr.flush();
+            wr.close();
+            int responseCode = con.getResponseCode();
+            
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) 
+            {
+                response.append(inputLine);
+            }
+            in.close();
+
+            if (response.toString().contains("updated"))
+            {
+                greskaPretrage = "Korisnici azurirani";
+            }
+            else if (response.toString().contains("created"))
+            {
+                greskaPretrage = "Korisnici kreirani";
+            }
+
+            br++;
+        }
+    }
+    
+    public void kreiranjeIndeksaSifarnika() throws Exception
+    {
+        int br = 1;
+        String json = "";
+        
+        for (Sifarnik s : listaSifarnika)
+        {            
+            json = "{ \"id\": \""+s.getId()+"\", \"naziv\": \""+s.getNaziv()+"\" }";
+
+            String url = "http://localhost:9200/sifarnik/sifarnik/"+br;
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("PUT");
+            con.setRequestProperty("Content-Type", "application/json");         
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(json);
+            wr.flush();
+            wr.close();
+            int responseCode = con.getResponseCode();
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) 
+            {
+                response.append(inputLine);
+            }
+            in.close();
+
+            if (response.toString().contains("updated"))
+            {
+                greskaPretrage = "Sifarnici azurirani";
+            }
+            else if (response.toString().contains("created"))
+            {
+                greskaPretrage = "Sifarnici kreirani";
+            }
+
+            br++;
+        }
+        
+    }
+    
+    public void pretraga()
+    {
+        String rezultat = "";
+        int brPom = 0;
+        try {
+            String url = "http://localhost:9200";
+            String kriterijumPretrage = "";
+            if (vrstaPretrage == 1)
+            {
+                url = url + "/korisnici/korisnici/_search";
+                kriterijumPretrage = "username";
+            }
+            else if (vrstaPretrage == 2)
+            {
+                url = url + "/sifarnik/sifarnik/_search";
+                kriterijumPretrage = "naziv";
+            }
+            String json = "{\n" + "\"query\" : {\n"+"\"match\":{\n"+"\""+kriterijumPretrage+"\":\""+uslovPretrage+"\"\n"+"}\n"+"}\n"+"}"; 
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json");         
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(json);
+            wr.flush();
+            wr.close();
+            int responseCode = con.getResponseCode();
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            
+            while ((inputLine = in.readLine()) != null) 
+            {
+                response.append(inputLine);
+            }
+            in.close();
+            
+            brPom = response.toString().indexOf("_source") + 9; 
+            
+            rezultat = response.toString().substring(brPom, response.toString().length()-4);
+            
+            if (vrstaPretrage == 1){
+            Korisnik k = JSONConverter.getInstance().JSONToKorisnik(rezultat);
+            rezultatPretrage = k.toString(); 
+            }
+            else if (vrstaPretrage == 2){      
+            Sifarnik s = JSONConverter.getInstance().JSONToSifarnik(rezultat);
+            rezultatPretrage = s.toString();
+            }
+            
+        } catch (FileNotFoundException ex) {
+            greskaPretrage = "Ne postoji trazeni indeks";
+        }
+        catch (Exception ex) {
+            greskaPretrage = ex.getMessage();
+        }
+    }
+   
+    public void obrisiIndeksaKorisnika() 
+    {
+        try {
+            String url = "http://localhost:9200/korisnici";         
+            String kriterijumPretrage = "";
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("DELETE");
+            con.setRequestProperty("Content-Type", "application/json");         
+            int responseCode = con.getResponseCode();
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            
+            while ((inputLine = in.readLine()) != null) 
+            {
+                response.append(inputLine);
+            }
+            in.close();
+
+            if (response.toString().contains("true"))
+            {
+               greskaPretrage = "Uspesno obrasan indeks korisnika"; 
+            }
+        } 
+        catch (FileNotFoundException ex) {
+            greskaPretrage = "Ne postoji indeks korisnika";
+        } 
+        catch (Exception ex) {
+            greskaPretrage = ex.getMessage();
+        }
+    }
+    
+    public void obrisiIndeksaSifarnika()
+    {
+        try {
+            String url = "http://localhost:9200/sifarnik";         
+            String kriterijumPretrage = "";
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("DELETE");
+            con.setRequestProperty("Content-Type", "application/json");         
+            int responseCode = con.getResponseCode();
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            
+            while ((inputLine = in.readLine()) != null) 
+            {
+                response.append(inputLine);
+            }
+            in.close();
+
+            if (response.toString().contains("true"))
+            {
+               greskaPretrage = "Uspesno obrasan indeks sifarnika"; 
+            }
+        }
+        catch (FileNotFoundException ex) {
+            greskaPretrage = "Ne postoji indeks sifarnika";
+        } 
+        catch (IOException ex) {
+            greskaPretrage = ex.getMessage();
+        }
+    }
+    
+    public void setUslovPretrage(String uslovPretrage) {
+        this.uslovPretrage = uslovPretrage;
+    }
+
+    public String getUslovPretrage() {
+        return uslovPretrage;
+    }
+
+    public String getRezultatPretrage() {
+        return rezultatPretrage;
+    }
+
+    public void setRezultatPretrage(String rezultatPretrage) {
+        this.rezultatPretrage = rezultatPretrage;
+    }
+
+    public int getVrstaPretrage() {
+        return vrstaPretrage;
+    }
+
+    public void setVrstaPretrage(int vrstaPretrage) {
+        this.vrstaPretrage = vrstaPretrage;
+    }
+
+    public String getGreskaPretrage() {
+        return greskaPretrage;
+    }
+
+    public void setGreskaPretrage(String greskaPretrage) {
+        this.greskaPretrage = greskaPretrage;
+    }
+    
+    
+        
 }
